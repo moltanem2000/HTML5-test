@@ -1,0 +1,24 @@
+	.box, .thingo{
+		color: #000000;
+		background-color: #F0F8FF;
+		padding: 5px 32px 5px 32px;
+		border: 1px solid;
+		border-radius: 8px;
+		display: inline-block;
+		height: 700px;
+		float:left;
+	}
+	
+	a:link { 
+		color:#FF9933;
+	}
+	a:visited {
+		color:#9966FF;
+	}
+	a:hover {
+		color:#FF9966;
+	}
+	
+	body {
+		background-image:url('background2.png');
+	}

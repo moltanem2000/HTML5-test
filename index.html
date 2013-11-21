@@ -5,10 +5,48 @@
 -->
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="style1.css" media="screen" />
 	<title>HTML5 game by Brandon Duncan</title>
 </head>
 <body>
-	<center><canvas id="canvas"></canvas></center>
+	<div class="box">
+		<h3>HTML5 Test Game:</h3>
+		<hr>
+		<h5><img src="player1icon.png"></img> Player 1: ARROW KEYS</h5>
+		<img src="player2icon.png"></img> Player 2: WASD<br>
+		<br>
+		<hr>
+		Collect the + in the middle<br>
+		to Score a point! Who can<br>
+		Score the most points?<br>
+		<br>
+		Every time you catch a +<br>
+		a new one will appear<br>
+		randomly somewhere within<br>
+		the dark box!<br>
+		<br>
+		<b>There's no win-condition</b><br>
+		but I intended it to end<br>
+		when the black box reaches<br>
+		the size of zero.<br>
+		<hr>
+	</div>
+	<canvas id="canvas" class="thingo"></canvas>
+	<div class="box">
+		<h3>Game by Brandon Duncan</h3>
+		<hr>
+		Hey I made this in a few hours<br>
+		on Nov. 20th 2013 as a look into<br>
+		HTML5 games.<br>
+		<br>
+		Go check out my Website:<br>
+		<b><a href="http://moltanem2000.github.io" target="_blank">MOLTANEM2000.GITHUB.IO</a></b><br>
+		<br>
+		Feel free to check out the source<br>
+		(Just right click -> view source)<br>
+		<hr>
+	</div>
+
 	<script type="text/javascript">
 				var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
@@ -242,11 +280,12 @@
 			}
 			
 			//Draw Scores
-			ctx.font = '12pt Arail';
-			ctx.fillStyle = '#fff';
+			ctx.font = '36pt Arail';
 			ctx.textBaseLine = 'top';
-			ctx.fillText(itemCounterOne, 10, 24);
-			ctx.fillText(itemCounterTwo, canvas.width-64, 24)
+			ctx.fillStyle = '#fD0';
+			ctx.fillText(itemCounterOne, 10, 48);
+			ctx.fillStyle = '#0Cf';
+			ctx.fillText(itemCounterTwo, canvas.width-48, 48)
 		}
 		 
 		function run() {
