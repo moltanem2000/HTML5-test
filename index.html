@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--
+	ICONS (Players, Item) by sbed http://opengameart.org/content/95-game-icons
+	Followed a tutorial for some of this, it can be found here: http://html5gamedev.samlancashire.com/
+-->
+<html>
+<head>
+	<title>HTML5 game by Brandon Duncan</title>
+</head>
+<body>
+	<center><canvas id="canvas"></canvas></center>
+	<script type="text/javascript">
+				var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		 
+		canvas.width = 700;
+		canvas.height = 700;
+		
+		//LOAD IMAGES
+		var CharacterSpriteOne = {
+			loaded: false,
+			image: new Image(),
+			tileWidth: 24,
+			tileHeight: 24
+		};
+		
+		var CharacterSpriteTwo = {
+			loaded: false,
+			image: new Image(),
+			tileWidth: 24,
+			tileHeight: 24
+		};
+		
+		var itemtile = {
+			loaded: false,
+			image: new Image(),
+			tileWidth: 24,
+			tileHeight: 24
+		};
+		
+		var background = {
+			loaded: false,
+			image: new Image(),
+			tileWidth: 800,
+			tileHeight: 800
+		};
+		 
+		CharacterSpriteOne.image.onload = function() {
+		   CharacterSpriteOne.loaded = true;
+		}
+		CharacterSpriteTwo.image.onload = function() {
+		   CharacterSpriteTwo.loaded = true;
+		}
+		itemtile.image.onload = function() {
+			itemtile.loaded = true;
+		}
+		background.image.onload = function() {
+			background.loaded = true;
+		}
+		 
+		CharacterSpriteTwo.image.src = 'player1.png';
+		CharacterSpriteOne.image.src = 'player2.png';
+		itemtile.image.src = 'item.png';
+		background.image.src = 'background.png';
+		
+		//INSTANIATE DEM OBJECTS
+		var CharacterOne = {
+			width: 24,
+			height: 24,
+			x: 96 - 24/2,
+			y: canvas.height/2 - 24/2,
+			speed: 12,
+			xspeed: 0,
+			yspeed: 0,
+			state: 0
+		};
+		var CharacterTwo = {
+			width: 24,
+			height: 24,
+			x: canvas.width -96 -24/2,
+			y: canvas.height/2 - 24/2,
+			speed: 12,
+			xspeed: 0,
+			yspeed: 0,
+			state: 2
+		};
+		 
+		var item = {
+			width: 24,
+			height: 24,
+			x: canvas.width/2 - 24/2,
+			y: canvas.height/2 - 24/2,
+		};
+		 
+		var keysDown = {};
+		window.addEventListener('keydown', function(e) {
+			keysDown[e.keyCode] = true;
+		});
+		window.addEventListener('keyup', function(e) {
+			delete keysDown[e.keyCode];
+		});
+		//AW YEAH
+		//GameVars
+		var itemCounterOne = 0;
+		var itemCounterTwo = 0;
+		var bordersize = 48;
+		
+		var speedconst = 2;
+		var slowconst = 1.25;
+		var bounceconst = 4;
+		
+		function collisionBox(A,B) {
+			return (
+				A.x < B.x + B.width &&
+				A.x + A.width > B.x &&
+				A.y < B.y + B.height &&
+				A.y + A.height > B.y
+			);
+		}
+		 
+		function update(mod) {
+			//oh god I should really do something about the following awful code but I'm in too deep now!
+			//Player 1 movement
+			if (65 in keysDown) {
+				CharacterOne.state = 2; //left
+				if (CharacterOne.xspeed > -CharacterOne.speed) {CharacterOne.xspeed -= speedconst;}
+			}
+			if (87 in keysDown) {
+				CharacterOne.state = 3; //up
+				if (CharacterOne.yspeed > -CharacterOne.speed) {CharacterOne.yspeed -= speedconst;}
+			}
+			if (68 in keysDown) {
+				CharacterOne.state = 0; //right
+				if (CharacterOne.xspeed < CharacterOne.speed) {CharacterOne.xspeed += speedconst;}
+			}
+			if (83 in keysDown) {
+				CharacterOne.state = 1; //down
+				if (CharacterOne.yspeed < CharacterOne.speed) {CharacterOne.yspeed += speedconst;}
+			}
+			CharacterOne.x += CharacterOne.xspeed;
+			CharacterOne.y += CharacterOne.yspeed;
+			CharacterOne.xspeed /= slowconst;
+			CharacterOne.yspeed /= slowconst;
+				//can't leave room
+			if (CharacterOne.x > canvas.width && CharacterOne.xspeed > 0) {CharacterOne.xspeed *= -bounceconst}
+			if (CharacterOne.x < 0 && CharacterOne.xspeed < 0) {CharacterOne.xspeed *= -bounceconst}
+			if (CharacterOne.y > canvas.height&& CharacterOne.yspeed > 0) {CharacterOne.yspeed *= -bounceconst}
+			if (CharacterOne.y < 0 && CharacterOne.yspeed < 0) {CharacterOne.yspeed *= -bounceconst}
+			
+			//Abandon hope all ye who enjoy modularity
+			
+			//Player 2 movement
+			if (37 in keysDown) {
+				CharacterTwo.state = 2; //left
+				if (CharacterTwo.xspeed > -CharacterTwo.speed) {CharacterTwo.xspeed -= speedconst;}
+			}
+			if (38 in keysDown) {
+				CharacterTwo.state = 3; //up
+				if (CharacterTwo.yspeed > -CharacterTwo.speed) {CharacterTwo.yspeed -= speedconst;}
+			}
+			if (39 in keysDown) {
+				CharacterTwo.state = 0; //right
+				if (CharacterTwo.xspeed < CharacterTwo.speed) {CharacterTwo.xspeed += speedconst;}
+			}
+			if (40 in keysDown) {
+				CharacterTwo.state = 1; //down
+				if (CharacterTwo.yspeed < CharacterTwo.speed) {CharacterTwo.yspeed += speedconst;}
+			}
+			CharacterTwo.x += CharacterTwo.xspeed;
+			CharacterTwo.y += CharacterTwo.yspeed;
+			CharacterTwo.xspeed /= slowconst;
+			CharacterTwo.yspeed /= slowconst;
+			if (CharacterTwo.x > canvas.width && CharacterTwo.xspeed > 0) {CharacterTwo.xspeed *= -bounceconst}
+			if (CharacterTwo.x < 0 && CharacterTwo.xspeed < 0) {CharacterTwo.xspeed *= -bounceconst}
+			if (CharacterTwo.y > canvas.height&& CharacterTwo.yspeed > 0) {CharacterTwo.yspeed *= -bounceconst}
+			if (CharacterTwo.y < 0 && CharacterTwo.yspeed < 0) {CharacterTwo.yspeed *= -bounceconst}
+		 
+			if (collisionBox(CharacterOne,item)) {
+				item.x = bordersize + (Math.random() * (canvas.width - 2*bordersize));
+				item.y = bordersize + (Math.random() * (canvas.height - 2*bordersize));
+				itemCounterOne ++;
+				bordersize += 4;
+			}
+			if (collisionBox(CharacterTwo,item)) {
+				item.x = bordersize + (Math.random() * (canvas.width - 2*bordersize));
+				item.y = bordersize + (Math.random() * (canvas.height - 2*bordersize));
+				itemCounterTwo ++;
+				bordersize += 4;
+			}
+		}
+		 
+		function render() {
+			//Draw background
+			if (background.loaded) {
+				ctx.drawImage(
+					background.image,
+					0,
+					0
+				);
+			}
+			
+			ctx.fillStyle = 'rgba(0,0,0,0.5)';
+			ctx.fillRect(bordersize,bordersize,canvas.width - 2*bordersize,canvas.height-2*bordersize);
+			
+			//Draw Item
+			if (itemtile.loaded) {
+				ctx.drawImage(
+					itemtile.image,
+					Math.round(item.x),
+					Math.round(item.y)
+				);
+			}
+		 
+			//Draw Player1
+			if (CharacterSpriteOne.loaded) {
+				ctx.drawImage(
+					CharacterSpriteOne.image,
+					CharacterOne.state * CharacterSpriteOne.tileWidth,
+					0, 
+					CharacterOne.width,
+					CharacterOne.height,
+					Math.round(CharacterOne.x),
+					Math.round(CharacterOne.y),
+					CharacterOne.width,
+					CharacterOne.height
+				);
+			}
+			
+			//Draw Player2
+			if (CharacterSpriteTwo.loaded) {
+				ctx.drawImage(
+					CharacterSpriteTwo.image,
+					CharacterTwo.state * CharacterSpriteTwo.tileWidth,
+					0, 
+					CharacterTwo.width,
+					CharacterTwo.height,
+					Math.round(CharacterTwo.x),
+					Math.round(CharacterTwo.y),
+					CharacterTwo.width,
+					CharacterTwo.height
+				);
+			}
+			
+			//Draw Scores
+			ctx.font = '12pt Arail';
+			ctx.fillStyle = '#fff';
+			ctx.textBaseLine = 'top';
+			ctx.fillText(itemCounterOne, 10, 24);
+			ctx.fillText(itemCounterTwo, canvas.width-64, 24)
+		}
+		 
+		function run() {
+			update((Date.now() - time) / 1000);
+			render();
+			time = Date.now();
+		}
+		 
+		var time = Date.now();
+		setInterval(run, 10);
+	</script>
+</body>
+</html>
